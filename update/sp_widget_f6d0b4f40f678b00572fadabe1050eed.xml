@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <client_script><![CDATA[function($timeout) {
+  /* widget controller */
+  var c = this;
+	console.log('DATA',c.data);
+	
+	c.changeState = function(state) {
+		c.data.story_state = state.toString();
+		console.log('CLICK',c.data);
+		c.server.update();
+	}
+	
+	$timeout(function(){
+		
+	});
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.iconlink a label,h2 {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.1;
+  padding: 0;
+  margin: 0 0 10px 0;
+}
+
+/* TOP ICON ---------- */
+
+a.top_icon {
+  display: block;
+  padding: 20px;
+  text-align: center;
+}
+
+a.top_icon .fa {
+  display: block;
+  text-align: center;
+}
+
+/* CIRCLE ICON ---------- */
+
+a.circle_icon {
+  display: block;
+  padding: 20px 0px 20px 70px;
+  position: relative;
+}
+
+a.circle_icon .fa {
+  position:absolute;
+  left: 0px;
+  top: 10px;
+}
+
+/* COLOR BOX ---------- */
+
+a.color_box {
+  display: block;
+  position: relative;
+  padding: 20px 20px 20px 82px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+a.color_box .fa {
+  position:absolute;
+  left: 20px;
+  top: 20px;
+  width:42px;
+  text-align: center;
+}
+
+.icon-link-background-primary {
+  background-color: $brand-primary;
+}
+
+.icon-link-background-info {
+  background-color: $brand-info;
+}
+
+.icon-link-background-success {
+  background-color: $brand-success;
+}
+
+.icon-link-background-warning {
+  background-color: $brand-warning;
+}
+
+.icon-link-background-danger {
+  background-color: $brand-danger;
+}
+
+.icon-link-background-default {
+  background-color: $brand-primary;
+}
+
+.text-primary {
+  color: $brand-primary;
+  
+  &amp;:hover {
+    color: darken($brand-primary, 20%);
+  }
+}
+
+.text-info {
+  color: $brand-info;
+  
+  &amp;:hover {
+    color: darken($brand-info, 20%);
+  }
+}
+
+.text-success {
+  color: $brand-success;
+  
+  &amp;:hover {
+    color: darken($brand-success, 20%);
+  }
+}
+
+.text-warning {
+  color: $brand-warning;
+  
+  &amp;:hover {
+    color: darken($brand-warning, 20%);
+  }
+}
+
+.text-danger {
+  color: $brand-danger;
+  
+  &amp;:hover {
+    color: darken($brand-danger, 20%);
+  }
+}
+
+.text-default {
+  color: $brand-primary;
+  
+  &amp;:hover {
+    color: darken($brand-primary, 20%);
+  }
+}</css>
+        <data_table>sp_instance_link</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>title,short_description,glyph,class_name,type,sc_category,url,kb_article,kb_topic,kb_category,sc_cat_item,sp_page,color</field_list>
+        <has_preview>false</has_preview>
+        <id>icon_active_story</id>
+        <internal>false</internal>
+        <link/>
+        <name>Icon active story</name>
+        <option_schema>[{"name":"link_template","label":"Template","type":"choice","choices":[{"label":"Top Icon","value":"Top Icon"},{"label":"Circle Icon","value":"Circle Icon"},{"label":"Color Box","value":"Color Box"}]}]</option_schema>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function(){
+	var gr = $sp.getInstanceRecord();
+	data.href = $sp.getMenuHREF(gr);
+	data.href = "";
+	data.target = options.target || "";
+	data.target = "";
+	//bell-slash
+	
+	var story = "";
+	
+	if (input) {
+		//gs.addInfoMessage("STATE = " + input.story_state);
+			story = new GlideRecord('x_145082_stories_story');
+			story.addQuery('state',2).addOrCondition('state',-5);
+			story.setLimit(1);
+			story.query();
+
+			if (story.next()) {
+				if (story.state == 2) story.state = -5;
+				else if (story.state == -5) story.state = 2;
+				data.story_state = story.state.toString();
+				//gs.addInfoMessage("STATE = " + data.story_state);
+				story.update();				
+			}		
+		
+			else {
+
+			}
+	}
+	
+			story = new GlideRecord('x_145082_stories_story');
+			story.addQuery('state',2).addOrCondition('state',-5);
+			story.setLimit(1);
+			story.query();
+
+			if (story.next()) {
+				data.story_number = story.number.toString();
+				data.story_short_description = story.short_description.toString();
+				data.story_description = story.description.toString();
+				data.story_state = story.state.toString();
+			} else {
+				data.story_number = "";
+				data.story_short_description = "";
+				data.story_description = "";
+				data.story_state = "";
+			}
+	
+	
+	
+	//console.log('INPUT',input);
+	/*
+		if (input) {		
+			story = new GlideRecord('x_145082_stories_story');
+			story.addQuery('state',2).addOrCondition('state',-5);
+			story.setLimit(1);
+			story.query();
+
+			if (story.next()) {
+				if (story.state == 2) story.state = -5;
+				else if (story.state == -5) story.state = 2;
+				data.story_state = story.state.toString();
+				story.update();				
+			}		
+		}
+		else {
+			
+		}
+		*/
+	
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-01-06 13:22:31</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
+        <sys_mod_count>50</sys_mod_count>
+        <sys_name>Icon active story</sys_name>
+        <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
+        <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-01-06 16:01:44</sys_updated_on>
+        <template><![CDATA[<div class="iconlink">
+
+  <a ng-if="(data.story_state == '2')"  class="top_icon {{::options.class_name}}" ng-href="{{::data.href}}" target="{{::data.target}}" >
+    <div class="m-b fa fa-{{::options.glyph}} fa-4x {{::options.class_name}} text-{{::options.color}} " ng-click="c.changeState('-5')"></div>
+    <h2>{{::data.story_title}}</h2>
+    <h2>{{::data.story_number}}</h2>
+    <h3>{{data.story_short_description}}</h3>
+    <span class="text-muted">{{data.story_description}}</span>
+  </a>
+  
+  <a ng-if="(data.story_state == '-5')"  class="top_icon {{::options.class_name}}" ng-href="{{::data.href}}" target="{{::data.target}}">
+    <div class="m-b fa fa-bell-slash fa-4x {{::options.class_name}} text-danger" ng-click="c.changeState('2')"></div>
+    <h2>{{::data.story_title}}</h2>
+    <h2>{{::data.story_number}}</h2>
+    <h3>{{data.story_short_description}}</h3>
+    <span class="text-muted">{{data.story_description}}</span>
+  </a>
+  
+  {{data.story_state}}
+
+</div>]]></template>
+    </sp_widget>
+</record_update>

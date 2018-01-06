@@ -12,6 +12,13 @@
 		c.server.update();
 	}
 	
+	c.changeActive = function(task) {
+		c.data.story_number = task.number.toString();
+		c.data.story_short_description = task.short_description.toString();
+		c.data.story_description = task.description.toString();
+		c.data.story_state = task.state.toString();
+		c.server.update();
+	}
 	$timeout(function(){
 		
 	});
@@ -148,7 +155,7 @@ a.color_box .fa {
         <docs/>
         <field_list>title,short_description,glyph,class_name,type,sc_category,url,kb_article,kb_topic,kb_category,sc_cat_item,sp_page,color</field_list>
         <has_preview>false</has_preview>
-        <id>icon_active_story</id>
+        <id>icon-active-story</id>
         <internal>false</internal>
         <link/>
         <name>Icon active story</name>
@@ -161,31 +168,13 @@ a.color_box .fa {
 	data.href = "";
 	data.target = options.target || "";
 	data.target = "";
+	data.list = [];
 	//bell-slash
 	
 	var story = "";
 	
-	if (input) {
-		//gs.addInfoMessage("STATE = " + input.story_state);
-			story = new GlideRecord('x_145082_stories_story');
-			story.addQuery('state',2).addOrCondition('state',-5);
-			story.setLimit(1);
-			story.query();
-
-			if (story.next()) {
-				if (story.state == 2) story.state = -5;
-				else if (story.state == -5) story.state = 2;
-				data.story_state = story.state.toString();
-				//gs.addInfoMessage("STATE = " + data.story_state);
-				story.update();				
-			}		
-		
-			else {
-
-			}
-	}
 	
-			story = new GlideRecord('x_145082_stories_story');
+	story = new GlideRecord('x_145082_stories_story');
 			story.addQuery('state',2).addOrCondition('state',-5);
 			story.setLimit(1);
 			story.query();
@@ -195,6 +184,7 @@ a.color_box .fa {
 				data.story_short_description = story.short_description.toString();
 				data.story_description = story.description.toString();
 				data.story_state = story.state.toString();
+				data.active = story.number.toString();
 			} else {
 				data.story_number = "";
 				data.story_short_description = "";
@@ -202,27 +192,68 @@ a.color_box .fa {
 				data.story_state = "";
 			}
 	
-	
-	
-	//console.log('INPUT',input);
-	/*
-		if (input) {		
 			story = new GlideRecord('x_145082_stories_story');
-			story.addQuery('state',2).addOrCondition('state',-5);
-			story.setLimit(1);
+			story.addQuery('state',1).addOrCondition('state',2).addOrCondition('state',-5);
 			story.query();
 
+			while (story.next()) {
+				var task = {
+				"number" : story.number.toString(),
+				"short_description" : story.short_description.toString(),
+				"description" : story.description.toString(),
+				"state" : story.state.toString(),
+				"time_worked" : story.time_worked.toString()
+				};
+					
+				data.list.push(task);
+				
+			}
+	
+	if (input) {
+			//gs.addInfoMessage(input.story_number + " " + input.story_short_description + " " + input.story_description + " " + input.story_state);
+		  //gs.addInfoMessage(data.active);
+			if (data.active != input.story_number){
+				//gs.addInfoMessage('Inny rekord' + data.active + ":" + input.story_number);
+				story = new GlideRecord('x_145082_stories_story');
+				story.addQuery('number',input.story_number);
+				story.setLimit(1);
+				story.query();
+
+				if (story.next()) {
+					story.state = 2;
+					story.update();	
+					data.story_number = input.story_number.toString();
+					data.story_short_description = input.story_short_description.toString();
+					data.story_description = input.story_description.toString();
+					data.story_state = story.state.toString();					
+				}					
+			}
+		 else {
+        //gs.addInfoMessage('Ten sam rekord');
+			  story = new GlideRecord('x_145082_stories_story');
+				story.addQuery('number',data.story_number);
+				story.setLimit(1);
+				story.query();
+			 
 			if (story.next()) {
-				if (story.state == 2) story.state = -5;
-				else if (story.state == -5) story.state = 2;
-				data.story_state = story.state.toString();
-				story.update();				
-			}		
-		}
-		else {
+				if (data.story_state == 2) story.state = -5;
+				else if (data.story_state == -5) story.state = 2;
+				data.story_state = input.story_state;
+				story.update();
+			}
 			
-		}
-		*/
+		 }
+		
+			
+	}
+	
+			
+	
+	
+	
+	
+	
+	
 	
 
 })();]]></script>
@@ -232,7 +263,7 @@ a.color_box .fa {
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>50</sys_mod_count>
+        <sys_mod_count>75</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -240,7 +271,7 @@ a.color_box .fa {
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-06 16:01:44</sys_updated_on>
+        <sys_updated_on>2018-01-06 22:29:49</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
 
   <a ng-if="(data.story_state == '2')"  class="top_icon {{::options.class_name}}" ng-href="{{::data.href}}" target="{{::data.target}}" >
@@ -259,7 +290,17 @@ a.color_box .fa {
     <span class="text-muted">{{data.story_description}}</span>
   </a>
   
-  {{data.story_state}}
+  <div class="list-group">
+  	<a ng-repeat="task in data.list"  class="list-group-item" ng-class="{active: task.number == data.story_number}" ng-click="c.changeActive(task)">
+      {{task.number}} - {{task.short_description}}
+      <span class="badge">{{task.time_worked}}</span>
+    </a>
+
+	</div>
+  
+  
+  
+
 
 </div>]]></template>
     </sp_widget>

@@ -4,11 +4,11 @@
         <abort_action>false</abort_action>
         <access>package_private</access>
         <action_delete>false</action_delete>
-        <action_insert>true</action_insert>
+        <action_insert>false</action_insert>
         <action_query>false</action_query>
         <action_update>true</action_update>
         <active>true</active>
-        <add_message>false</add_message>
+        <add_message>true</add_message>
         <advanced>true</advanced>
         <change_fields>false</change_fields>
         <client_callable>false</client_callable>
@@ -16,12 +16,12 @@
         <condition/>
         <description/>
         <execute_function>false</execute_function>
-        <filter_condition table="x_145082_stories_story">stateCHANGESTO2^EQ<item endquery="false" field="state" goto="false" newquery="false" operator="CHANGESTO" or="false" value="2"/>
+        <filter_condition table="x_145082_stories_story">stateCHANGESFROM2^EQ<item endquery="false" field="state" goto="false" newquery="false" operator="CHANGESFROM" or="false" value="2"/>
             <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
         </filter_condition>
         <is_rest>false</is_rest>
-        <message/>
-        <name>[ww] Set rest records to closed on open </name>
+        <message><![CDATA[<p> ACTION</p>]]></message>
+        <name>[ww] Set work time</name>
         <order>100</order>
         <priority>100</priority>
         <rest_method/>
@@ -33,37 +33,35 @@
         <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
 
 	// Add your code here
-	var gr = new GlideRecord('x_145082_stories_story');
-	gr.addActiveQuery();
-	gr.addQuery('sys_id','!=',current.sys_id.toString());
-	gr.addQuery('state',2).addOrCondition('state',-5);
-	gr.query();
+	gs.addInfoMessage(current.time_worked);
+    var end = new GlideDate().getNumericValue();
+	gs.addInfoMessage(end);
+	var start = current.sys_updated_on.dateNumericValue();
+	gs.addInfoMessage(start);
 	
-	while (gr.next()){
-		gr.state = 1;
-		gr.update();
-	}
+	var time = end-start;
+	gs.addInfoMessage(time);
 
 })(current, previous);]]></script>
         <sys_class_name>sys_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2018-01-06 11:54:29</sys_created_on>
+        <sys_created_on>2018-01-06 23:14:05</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
-        <sys_id>d55a1c3c0f278b00572fadabe1050ee7</sys_id>
-        <sys_mod_count>2</sys_mod_count>
-        <sys_name>[ww] Set rest records to closed on open </sys_name>
+        <sys_id>2fa4f2340f6b8b00572fadabe1050ee9</sys_id>
+        <sys_mod_count>13</sys_mod_count>
+        <sys_name>[ww] Set work time</sys_name>
         <sys_overrides/>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
         <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
-        <sys_update_name>sys_script_d55a1c3c0f278b00572fadabe1050ee7</sys_update_name>
+        <sys_update_name>sys_script_2fa4f2340f6b8b00572fadabe1050ee9</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-06 22:37:07</sys_updated_on>
+        <sys_updated_on>2018-01-06 23:35:45</sys_updated_on>
         <template/>
-        <when>after</when>
+        <when>before</when>
     </sys_script>
-    <sys_translated_text action="delete_multiple" query="documentkey=d55a1c3c0f278b00572fadabe1050ee7"/>
+    <sys_translated_text action="delete_multiple" query="documentkey=2fa4f2340f6b8b00572fadabe1050ee9"/>
 </record_update>

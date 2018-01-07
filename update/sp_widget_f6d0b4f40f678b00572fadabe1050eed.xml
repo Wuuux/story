@@ -4,24 +4,35 @@
         <client_script><![CDATA[function($timeout) {
   /* widget controller */
   var c = this;
-	console.log('DATA',c.data);
+	c.data.counter = 0;
+
 	
 	c.changeState = function(state) {
 		c.data.story_state = state.toString();
-		console.log('CLICK',c.data);
+		if (state == '2') c.data.counter = 0;
 		c.server.update();
 	}
 	
 	c.changeActive = function(task) {
+
 		c.data.story_number = task.number.toString();
 		c.data.story_short_description = task.short_description.toString();
 		c.data.story_description = task.description.toString();
-		c.data.story_state = task.state.toString();
+		c.data.story_state = '-5';
 		c.server.update();
 	}
-	$timeout(function(){
+	
+	c.tick = function() {
+
+		c.data.counter++;
+	  $timeout(c.tick, 1000);
 		
-	});
+	};
+	
+	c.tick();
+	
+	
+
 }]]></client_script>
         <controller_as>c</controller_as>
         <css>.iconlink a label,h2 {
@@ -148,6 +159,10 @@ a.color_box .fa {
   &amp;:hover {
     color: darken($brand-primary, 20%);
   }
+}
+
+.badge {
+    background-color: #428bca;
 }</css>
         <data_table>sp_instance_link</data_table>
         <demo_data/>
@@ -169,7 +184,6 @@ a.color_box .fa {
 	data.target = options.target || "";
 	data.target = "";
 	data.list = [];
-	//bell-slash
 	
 	var story = "";
 	
@@ -184,6 +198,7 @@ a.color_box .fa {
 				data.story_short_description = story.short_description.toString();
 				data.story_description = story.description.toString();
 				data.story_state = story.state.toString();
+				data.story_time_worked = story.time_worked.toString().slice(11);
 				data.active = story.number.toString();
 			} else {
 				data.story_number = "";
@@ -192,44 +207,29 @@ a.color_box .fa {
 				data.story_state = "";
 			}
 	
-			story = new GlideRecord('x_145082_stories_story');
-			story.addQuery('state',1).addOrCondition('state',2).addOrCondition('state',-5);
-			story.query();
-
-			while (story.next()) {
-				var task = {
-				"number" : story.number.toString(),
-				"short_description" : story.short_description.toString(),
-				"description" : story.description.toString(),
-				"state" : story.state.toString(),
-				"time_worked" : story.time_worked.toString()
-				};
-					
-				data.list.push(task);
-				
-			}
+			
 	
 	if (input) {
-			//gs.addInfoMessage(input.story_number + " " + input.story_short_description + " " + input.story_description + " " + input.story_state);
-		  //gs.addInfoMessage(data.active);
+
 			if (data.active != input.story_number){
-				//gs.addInfoMessage('Inny rekord' + data.active + ":" + input.story_number);
+				
 				story = new GlideRecord('x_145082_stories_story');
 				story.addQuery('number',input.story_number);
 				story.setLimit(1);
 				story.query();
 
 				if (story.next()) {
-					story.state = 2;
+					story.state = -5;
 					story.update();	
-					data.story_number = input.story_number.toString();
-					data.story_short_description = input.story_short_description.toString();
-					data.story_description = input.story_description.toString();
-					data.story_state = story.state.toString();					
+					data.story_number = story.number.toString();
+					data.story_short_description = story.short_description.toString();
+					data.story_description = story.description.toString();
+					data.story_state = story.state.toString();	
+					data.story_time_worked = story.time_worked.toString().slice(11);
 				}					
 			}
 		 else {
-        //gs.addInfoMessage('Ten sam rekord');
+
 			  story = new GlideRecord('x_145082_stories_story');
 				story.addQuery('number',data.story_number);
 				story.setLimit(1);
@@ -239,15 +239,34 @@ a.color_box .fa {
 				if (data.story_state == 2) story.state = -5;
 				else if (data.story_state == -5) story.state = 2;
 				data.story_state = input.story_state;
+				
 				story.update();
+				data.story_time_worked = story.time_worked.toString().slice(11);
 			}
 			
-		 }
-		
+		 }	
 			
 	}
 	
 			
+	
+	story = new GlideRecord('x_145082_stories_story');
+			story.addQuery('state',1).addOrCondition('state',2).addOrCondition('state',-5);
+			story.orderBy('number');		
+			story.query();
+
+			while (story.next()) {
+				var task = {
+				"number" 						: story.number.toString(),
+				"short_description" : story.short_description.toString(),
+				"description" 			: story.description.toString(),
+				"state" 						: story.state.toString(),
+				"time_worked" 			: story.time_worked.toString().slice(11)
+				};
+					
+				data.list.push(task);
+				
+			}
 	
 	
 	
@@ -263,7 +282,7 @@ a.color_box .fa {
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>75</sys_mod_count>
+        <sys_mod_count>121</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -271,29 +290,38 @@ a.color_box .fa {
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-06 22:29:49</sys_updated_on>
+        <sys_updated_on>2018-01-07 13:36:36</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
 
-  <a ng-if="(data.story_state == '2')"  class="top_icon {{::options.class_name}}" ng-href="{{::data.href}}" target="{{::data.target}}" >
+  <a ng-if="(data.story_state == '2')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}" >
     <div class="m-b fa fa-{{::options.glyph}} fa-4x {{::options.class_name}} text-{{::options.color}} " ng-click="c.changeState('-5')"></div>
-    <h2>{{::data.story_title}}</h2>
-    <h2>{{::data.story_number}}</h2>
+	
+    <h2>{{data.story_number}} 
+      <br> <span class="badge">{{data.story_time_worked}}</span>
+    {{data.counter}} s
+    </h2>
+    
+
     <h3>{{data.story_short_description}}</h3>
     <span class="text-muted">{{data.story_description}}</span>
   </a>
   
-  <a ng-if="(data.story_state == '-5')"  class="top_icon {{::options.class_name}}" ng-href="{{::data.href}}" target="{{::data.target}}">
+  <a ng-if="(data.story_state == '-5')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}">
     <div class="m-b fa fa-bell-slash fa-4x {{::options.class_name}} text-danger" ng-click="c.changeState('2')"></div>
-    <h2>{{::data.story_title}}</h2>
-    <h2>{{::data.story_number}}</h2>
+
+    <h2>{{data.story_number}} 
+      <br><span class="badge">{{data.story_time_worked}}</span></h2>
+
     <h3>{{data.story_short_description}}</h3>
     <span class="text-muted">{{data.story_description}}</span>
   </a>
   
   <div class="list-group">
   	<a ng-repeat="task in data.list"  class="list-group-item" ng-class="{active: task.number == data.story_number}" ng-click="c.changeActive(task)">
-      {{task.number}} - {{task.short_description}}
+      {{task.number}}  
       <span class="badge">{{task.time_worked}}</span>
+      <br>
+      {{task.short_description}}
     </a>
 
 	</div>

@@ -4,7 +4,19 @@
         <client_script><![CDATA[function($timeout) {
   /* widget controller */
   var c = this;
-	c.data.counter = 0;
+	
+	c.display_counter = function(x) {
+		if (x < 60) return '' + x + 's';
+		var min = Math.floor(x/60);
+		var sec = x - (min *60);
+		if (x < 3600) return '' + min  + 'min '+ sec + 's';
+		var h = Math.floor(x/3600);
+		min = Math.floor((x - (h*3600))/60);
+		sec = x - (h * 3600) - (min * 60);
+		return '' + h + 'h ' + min  + 'min '+ sec + 's';
+		
+	};
+	
 
 	
 	c.changeState = function(state) {
@@ -25,6 +37,7 @@
 	c.tick = function() {
 
 		c.data.counter++;
+		c.data.counter_display = c.display_counter(c.data.counter);
 	  $timeout(c.tick, 1000);
 		
 	};
@@ -32,7 +45,7 @@
 	c.tick();
 	
 	
-
+	
 }]]></client_script>
         <controller_as>c</controller_as>
         <css>.iconlink a label,h2 {
@@ -184,6 +197,7 @@ a.color_box .fa {
 	data.target = options.target || "";
 	data.target = "";
 	data.list = [];
+	data.counter = 0;
 	
 	var story = "";
 	
@@ -200,11 +214,20 @@ a.color_box .fa {
 				data.story_state = story.state.toString();
 				data.story_time_worked = story.time_worked.toString().slice(11);
 				data.active = story.number.toString();
+				data.counter_display = "0s";
+				if (story.state == 2) {
+					var end = new GlideDateTime().getNumericValue();
+					var start = story.work_start.dateNumericValue();	
+					var diff = end-start;					
+					data.counter = Math.floor(diff/1000);
+					data.counter_display = display_counter(data.counter);
+				}
 			} else {
 				data.story_number = "";
 				data.story_short_description = "";
 				data.story_description = "";
 				data.story_state = "";
+				
 			}
 	
 			
@@ -270,7 +293,17 @@ a.color_box .fa {
 	
 	
 	
-	
+	function display_counter(x) {
+		if (x < 60) return '' + x + 's';
+		var min = Math.floor(x/60);
+		var sec = x - (min *60);
+		if (x < 3600) return '' + min  + 'min '+ sec + 's';
+		var h = Math.floor(x/3600);
+		min = Math.floor((x - (h*3600))/60);
+		sec = x - (h * 3600) - (min * 60);
+		return '' + h + 'h ' + min  + 'min '+ sec + 's';
+		
+	}
 	
 	
 	
@@ -282,7 +315,7 @@ a.color_box .fa {
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>121</sys_mod_count>
+        <sys_mod_count>128</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -290,15 +323,15 @@ a.color_box .fa {
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-07 13:36:36</sys_updated_on>
+        <sys_updated_on>2018-01-07 15:52:46</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
 
   <a ng-if="(data.story_state == '2')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}" >
     <div class="m-b fa fa-{{::options.glyph}} fa-4x {{::options.class_name}} text-{{::options.color}} " ng-click="c.changeState('-5')"></div>
 	
-    <h2>{{data.story_number}} 
+    <h2>{{data.story_number}} - {{data.counter_display}}
       <br> <span class="badge">{{data.story_time_worked}}</span>
-    {{data.counter}} s
+    
     </h2>
     
 

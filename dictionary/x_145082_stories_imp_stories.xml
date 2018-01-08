@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element extends="sys_import_set_row" label="IMP stories" max_length="40" name="x_145082_stories_imp_stories" type="collection">
+        <element attributes="import_attribute_name=Blocked,edge_encryption_enabled=true" label="Blocked" max_length="40" name="u_blocked" type="string"/>
+        <element attributes="import_attribute_name=Developer,edge_encryption_enabled=true" label="Developer" max_length="40" name="u_developer" type="string"/>
+        <element attributes="import_attribute_name=Epic,edge_encryption_enabled=true" label="Epic" max_length="40" name="u_epic" type="string"/>
+        <element attributes="import_attribute_name=Estimate" label="Estimate" max_length="40" name="u_estimate" type="integer"/>
+        <element attributes="import_attribute_name=Number,edge_encryption_enabled=true" label="Number" max_length="40" name="u_number" type="string"/>
+        <element attributes="import_attribute_name=Priority,edge_encryption_enabled=true" label="Priority" max_length="40" name="u_priority" type="string"/>
+        <element attributes="import_attribute_name=Short description,edge_encryption_enabled=true" label="Short description" max_length="73" name="u_short_description" type="string"/>
+        <element attributes="import_attribute_name=State,edge_encryption_enabled=true" label="State" max_length="40" name="u_state" type="string"/>
+        <element attributes="import_attribute_name=Task type,edge_encryption_enabled=true" label="Task type" max_length="40" name="u_task_type" type="string"/>
+    </element>
+</database>

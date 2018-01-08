@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_index">
+    <sys_index action="INSERT_OR_UPDATE">
+        <col_name_string>short_description</col_name_string>
+        <index_col_name element="short_description" name="task">a26dc3869d32320092c0251cbdfd79f7</index_col_name>
+        <logical_table_name>x_145082_stories_story</logical_table_name>
+        <sys_class_name>sys_index</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-01-08 07:52:51</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>9198b51d0f67cb00572fadabe1050ed1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_145082_stories_story</sys_name>
+        <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
+        <sys_update_name>sys_index_x_145082_stories_story_short_description</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-01-08 07:52:51</sys_updated_on>
+        <table display_value="Story" name="x_145082_stories_story">2ced2f280fe38b00572fadabe1050e2f</table>
+        <unique_index>false</unique_index>
+    </sys_index>
+</record_update>

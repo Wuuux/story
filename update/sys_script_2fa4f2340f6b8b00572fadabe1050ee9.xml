@@ -39,7 +39,8 @@
 	var diff = end-start;
 	
 	var timems = current.time_worked.dateNumericValue();
-	timems = timems + diff; 
+	// only work longer than 5minutes will be noted
+	if (diff > 300000) timems = timems + diff; 
 	current.time_worked.setDateNumericValue(timems);
 	
 
@@ -51,7 +52,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>2fa4f2340f6b8b00572fadabe1050ee9</sys_id>
-        <sys_mod_count>26</sys_mod_count>
+        <sys_mod_count>29</sys_mod_count>
         <sys_name>[ww] Set work time</sys_name>
         <sys_overrides/>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
@@ -60,7 +61,7 @@
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sys_script_2fa4f2340f6b8b00572fadabe1050ee9</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-07 11:22:17</sys_updated_on>
+        <sys_updated_on>2018-01-08 12:48:56</sys_updated_on>
         <template>work_endSAMEASsys_updated_on^EQ</template>
         <when>before</when>
     </sys_script>

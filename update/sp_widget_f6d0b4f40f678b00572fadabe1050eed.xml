@@ -55,6 +55,18 @@
 	
 	c.tick();
 	
+	c.delete_time_card = function(card){	
+		var obj = {
+			"task" : c.data.story_number.toString(),
+			"card_date" : card.slice(0,19).toString()
+		}
+		c.data.card_to_delete = card;
+		c.server.update();
+		console.log(obj);
+		
+		
+	}
+	
 	
 	
 }]]></client_script>
@@ -192,6 +204,10 @@ a.color_box .fa {
 .counter {
 	color: $brand-danger;
   font-weight: bold;
+}
+
+#story_comment {
+
 }</css>
         <data_table>sp_instance_link</data_table>
         <demo_data/>
@@ -215,6 +231,7 @@ a.color_box .fa {
 	data.list = [];
 	data.counter = 0;
 	data.story_list = [];
+	data.card_to_delete = "";
 	
 	var story = "";
 	
@@ -239,10 +256,12 @@ a.color_box .fa {
 					card_info.query();
 
 					while (card_info.next()) {
-						var info = 
-								card_info.sys_updated_on.toString() + " : " +
+						var info = {
+								"text" : card_info.sys_updated_on.toString() + " : " +
 								card_info.comments.toString().toUpperCase() + " : " +
-								card_info.time_worked.slice(11);
+								card_info.time_worked.slice(11),
+							  "id" : card_info.sys_id.toString()
+						}
 						data.story_list.push(info);
 					}
 				
@@ -265,6 +284,18 @@ a.color_box .fa {
 			
 	
 	if (input) {
+			//gs.addInfoMessage(input.card_to_delete.card_date);
+		  if (input.card_to_delete != "") {
+				var card_to_delete = new GlideRecord('task_time_worked');
+					card_to_delete.addQuery('sys_id',input.card_to_delete);
+					card_to_delete.setLimit(1);
+					card_to_delete.query();
+				if (card_to_delete.next()) {
+					//gs.addInfoMessage('found');
+					card_to_delete.task = '00000000000000000000000000000000';
+					card_to_delete.update();
+				} 
+			} 
 
 			if (data.active != input.story_number){
 				
@@ -299,12 +330,14 @@ a.color_box .fa {
 				  card_info2.addQuery('task',story.sys_id);
 					card_info2.orderByDesc('sys_updated_on');
 					card_info2.query();
-
+					data.story_list = [];
 					while (card_info2.next()) {
-						var info2 = 
-								card_info2.sys_updated_on.toString() + " : " +
+						var info2 = {
+								"text" : card_info2.sys_updated_on.toString() + " : " +
 								card_info2.comments.toString().toUpperCase() + " : " +
-								card_info2.time_worked.slice(11);
+								card_info2.time_worked.slice(11),
+							  "id" : card_info2.sys_id.toString()
+						}
 						data.story_list.push(info2);
 					}
 				}					
@@ -342,12 +375,14 @@ a.color_box .fa {
 				  card_info3.addQuery('task',story.sys_id);
 					card_info3.orderByDesc('sys_updated_on');
 					card_info3.query();
-
+					data.story_list = [];
 					while (card_info3.next()) {
-						var info3 = 
-								card_info3.sys_updated_on.toString() + " : " +
+						var info3 = {
+								"text" : card_info3.sys_updated_on.toString() + " : " +
 								card_info3.comments.toString().toUpperCase() + " : " +
-								card_info3.time_worked.slice(11);
+								card_info3.time_worked.slice(11),
+							  "id" : card_info3.sys_id.toString()
+						}
 						data.story_list.push(info3);
 					}
 				
@@ -402,7 +437,7 @@ a.color_box .fa {
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>165</sys_mod_count>
+        <sys_mod_count>193</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -410,50 +445,47 @@ a.color_box .fa {
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-07 22:13:14</sys_updated_on>
+        <sys_updated_on>2018-01-08 12:42:36</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
 
   <a ng-if="(data.story_state == '2')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}" >
     <div class="m-b fa fa-{{::options.glyph}} fa-4x {{::options.class_name}} text-{{::options.color}} " ng-click="c.changeState('-5')"></div>
 	
-    <h2 ng-click="c.toogle()">{{data.story_number}} : <span class="counter">{{data.counter_display}}</span>
+    <h2 ng-click="c.toogle()">{{data.story_short_description}} : <span class="counter">{{data.counter_display}}</span>
+      <br> <span class="text-muted">{{data.story_description}}</span>
       <br> <span class="badge">{{data.story_time_worked}}</span>
-      <br> <span ng-if="(data.comment != '')"><i>Your comment : {{data.comment}}</i></span>
-    </h2>
-
-    
-
-    <h3>{{data.story_short_description}}</h3>
-    <span class="text-muted">{{data.story_description}}</span>
-        
+      <br> <span ng-if="(data.comment != '')"><i>{{data.comment}}</i></span>
+    </h2>       
     
   </a>
   
   <a ng-if="(data.story_state == '-5')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}">
     <div class="m-b fa fa-bell-slash fa-4x {{::options.class_name}} text-danger" ng-click="c.changeState('2')"></div>
 
-    <h2 ng-click="c.toogle()">{{data.story_number}} 
-      <br><span class="badge">{{data.story_time_worked}}</span></h2>
-    Comment to story : <input id="story_comment">
-    <h3>{{data.story_short_description}}</h3>
-    <span class="text-muted">{{data.story_description}}</span>
+    <h2 ng-click="c.toogle()">{{data.story_short_description}} 
+      <br><span class="text-muted">{{data.story_description}}</span>
+      <br><span class="badge">{{data.story_time_worked}}</span>
+    </h2>
+    <p>Work description</p>
+    <div><input id="story_comment"></div>
+    
     
   </a>
   <div ng-if="(data.task_info == true)">
     work time cards
   <ul  class="list-group">
       <li ng-repeat="info in data.story_list"  class="list-group-item list-group-item-info" >
-        {{info}}  
+        {{info.text}}  
       </li>
 	 </ul>
   </div>
   
   <div class="list-group">
   	<a ng-repeat="task in data.list"  class="list-group-item" ng-class="{active: task.number == data.story_number}" ng-click="c.changeActive(task)">
-      {{task.number}}  
+      {{task.short_description}}  
       <span class="badge">{{task.time_worked}}</span>
       <br>
-      {{task.short_description}}
+      {{task.description}}
     </a>
 
 	</div>

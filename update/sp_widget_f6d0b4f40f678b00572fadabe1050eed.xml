@@ -6,6 +6,7 @@
   var c = this;
 	c.data.task_info = false;
 	c.data.day_info = false;
+	c.data.stories_status = false;
 	
 	c.display_counter = function(x) {
 		if (x < 60) return '' + x + 's';
@@ -59,6 +60,11 @@
 		
 	}
 	
+	c.toogle_stories = function(){
+		c.data.stories_status = !c.data.stories_status;
+		
+	}
+	
 	c.tick();
 	
 	c.delete_time_card = function(card){	
@@ -77,143 +83,147 @@
 	
 }]]></client_script>
         <controller_as>c</controller_as>
-        <css>.iconlink a label,h2 {
-  display: block;
-  font-size: 2.5rem;
-  font-weight: 300;
-  line-height: 1.1;
-  padding: 0;
-  margin: 0 0 10px 0;
-}
-
-/* TOP ICON ---------- */
-
-a.top_icon {
-  display: block;
-  padding: 20px;
-  text-align: center;
-}
-
-a.top_icon .fa {
-  display: block;
-  text-align: center;
-}
-
-/* CIRCLE ICON ---------- */
-
-a.circle_icon {
-  display: block;
-  padding: 20px 0px 20px 70px;
-  position: relative;
-}
-
-a.circle_icon .fa {
-  position:absolute;
-  left: 0px;
-  top: 10px;
-}
-
-/* COLOR BOX ---------- */
-
-a.color_box {
-  display: block;
-  position: relative;
-  padding: 20px 20px 20px 82px;
-  border-radius: 4px;
-  margin-bottom: 20px;
-}
-
-a.color_box .fa {
-  position:absolute;
-  left: 20px;
-  top: 20px;
-  width:42px;
-  text-align: center;
-}
-
-.icon-link-background-primary {
-  background-color: $brand-primary;
-}
-
-.icon-link-background-info {
-  background-color: $brand-info;
-}
-
-.icon-link-background-success {
-  background-color: $brand-success;
-}
-
-.icon-link-background-warning {
-  background-color: $brand-warning;
-}
-
-.icon-link-background-danger {
-  background-color: $brand-danger;
-}
-
-.icon-link-background-default {
-  background-color: $brand-primary;
-}
-
-.text-primary {
-  color: $brand-primary;
-  
-  &amp;:hover {
-    color: darken($brand-primary, 20%);
-  }
-}
-
-.text-info {
-  color: $brand-info;
-  
-  &amp;:hover {
-    color: darken($brand-info, 20%);
-  }
-}
-
-.text-success {
-  color: $brand-success;
-  
-  &amp;:hover {
-    color: darken($brand-success, 20%);
-  }
-}
-
-.text-warning {
-  color: $brand-warning;
-  
-  &amp;:hover {
-    color: darken($brand-warning, 20%);
-  }
-}
-
-.text-danger {
-  color: $brand-danger;
-  
-  &amp;:hover {
-    color: darken($brand-danger, 20%);
-  }
-}
-
-.text-default {
-  color: $brand-primary;
-  
-  &amp;:hover {
-    color: darken($brand-primary, 20%);
-  }
-}
-
-.badge {
-    background-color: #428bca;
-}
-
-.counter {
-	color: $brand-danger;
-  font-weight: bold;
-}
-
-#story_comment {
-
+        <css>.iconlink a label,h2 {&#13;
+  display: block;&#13;
+  font-size: 2.5rem;&#13;
+  font-weight: 300;&#13;
+  line-height: 1.1;&#13;
+  padding: 0;&#13;
+  margin: 0 0 10px 0;&#13;
+}&#13;
+&#13;
+/* TOP ICON ---------- */&#13;
+&#13;
+a.top_icon {&#13;
+  display: block;&#13;
+  padding: 20px;&#13;
+  text-align: center;&#13;
+}&#13;
+&#13;
+a.top_icon .fa {&#13;
+  display: block;&#13;
+  text-align: center;&#13;
+}&#13;
+&#13;
+/* CIRCLE ICON ---------- */&#13;
+&#13;
+a.circle_icon {&#13;
+  display: block;&#13;
+  padding: 20px 0px 20px 70px;&#13;
+  position: relative;&#13;
+}&#13;
+&#13;
+a.circle_icon .fa {&#13;
+  position:absolute;&#13;
+  left: 0px;&#13;
+  top: 10px;&#13;
+}&#13;
+&#13;
+/* COLOR BOX ---------- */&#13;
+&#13;
+a.color_box {&#13;
+  display: block;&#13;
+  position: relative;&#13;
+  padding: 20px 20px 20px 82px;&#13;
+  border-radius: 4px;&#13;
+  margin-bottom: 20px;&#13;
+}&#13;
+&#13;
+a.color_box .fa {&#13;
+  position:absolute;&#13;
+  left: 20px;&#13;
+  top: 20px;&#13;
+  width:42px;&#13;
+  text-align: center;&#13;
+}&#13;
+&#13;
+.icon-link-background-primary {&#13;
+  background-color: $brand-primary;&#13;
+}&#13;
+&#13;
+.icon-link-background-info {&#13;
+  background-color: $brand-info;&#13;
+}&#13;
+&#13;
+.icon-link-background-success {&#13;
+  background-color: $brand-success;&#13;
+}&#13;
+&#13;
+.icon-link-background-warning {&#13;
+  background-color: $brand-warning;&#13;
+}&#13;
+&#13;
+.icon-link-background-danger {&#13;
+  background-color: $brand-danger;&#13;
+}&#13;
+&#13;
+.icon-link-background-default {&#13;
+  background-color: $brand-primary;&#13;
+}&#13;
+&#13;
+.text-primary {&#13;
+  color: $brand-primary;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-primary, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-info {&#13;
+  color: $brand-info;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-info, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-success {&#13;
+  color: $brand-success;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-success, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-warning {&#13;
+  color: $brand-warning;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-warning, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-danger {&#13;
+  color: $brand-danger;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-danger, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-default {&#13;
+  color: $brand-primary;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-primary, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.badge {&#13;
+    background-color: #428bca;&#13;
+}&#13;
+&#13;
+.counter {&#13;
+	color: $brand-danger;&#13;
+  font-weight: bold;&#13;
+}&#13;
+&#13;
+#story_comment {&#13;
+&#13;
+}&#13;
+&#13;
+.toogler {&#13;
+margin-bottom : 15px;&#13;
 }</css>
         <data_table>sp_instance_link</data_table>
         <demo_data/>
@@ -502,7 +512,25 @@ a.color_box .fa {
 	}
 	
 	
+	var request = new sn_ws.RESTMessageV2();
+  //request.setEndpoint('https://support.spoc.pl/api/now/table/x_mwtso_ppm_story?sysparm_query=assigned_to%3Dc2e35d38377bf200811dfa7b34990ef4%255Estate!%253D303%255EORstate%253DNULL%255Estate!%253D307%255EORstate%253DNULL%255Estate!%253D304%255EORstate%253DNULL%255Estate!%253D305%255EORstate%253DNULL%255Eblocked%253Dfalse&sysparm_fields=number%2Cshort_description');
+  request.setEndpoint('https://support.spoc.pl/api/now/table/x_mwtso_ppm_story?sysparm_query=assigned_to%3Dc2e35d38377bf200811dfa7b34990ef4%5Estate!%3D303%5Estate!%3D307%5Estate!%3D304%5Estate!%3D305%5Eblocked!%3Dtrue&sysparm_fields=number%2Cshort_description%2Cstate%2Cblocked');
 	
+	request.setHttpMethod('GET');
+
+  var user = 'wojciech.winski@spoc.pl';
+  var password = '2XXusta2@@usta';
+
+  request.setBasicAuth(user,password);
+  request.setRequestHeader("Accept","application/json");
+
+  var response = request.execute();
+	//gs.addInfoMessage('EXEC');
+  //gs.log(response.getBody());
+	//gs.addInfoMessage(response.getBody());
+	//gs.info(response.getBody());
+	var obj = JSON.parse(response.getBody());
+	for (var i=0;i<obj.result.length;i++) gs.info(obj.result[i].number + " " + obj.result[i].short_description);
 
 })();]]></script>
         <servicenow>false</servicenow>
@@ -511,7 +539,7 @@ a.color_box .fa {
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>209</sys_mod_count>
+        <sys_mod_count>249</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -519,11 +547,11 @@ a.color_box .fa {
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-15 08:31:45</sys_updated_on>
+        <sys_updated_on>2018-01-16 23:05:44</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
 
   <a ng-if="(data.story_state == '2')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}" >
-    <div class="m-b fa fa-{{::options.glyph}} fa-4x {{::options.class_name}} text-{{::options.color}} " ng-click="c.changeState('-5')"></div>
+    <div class="m-b fa fa-{{::options.glyph}} fa-4x {{::options.class_name}} text-{{::options.color}} " ng-click="c.changeState('-5')"><br>STOP</div>
 	
     <h2 ng-click="c.toogle()">{{data.story_short_description}} : <span class="counter">{{data.counter_display}}</span>
       <br> <span class="text-muted">{{data.story_description}}</span>
@@ -534,7 +562,7 @@ a.color_box .fa {
   </a>
   
   <a ng-if="(data.story_state == '-5')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}">
-    <div class="m-b fa fa-bell-slash fa-4x {{::options.class_name}} text-danger" ng-click="c.changeState('2')"></div>
+    <div class="m-b fa fa-bell-slash fa-4x {{::options.class_name}} text-danger" ng-click="c.changeState('2')"><br>START</div>
 
     <h2 ng-click="c.toogle()">{{data.story_short_description}} 
       <br><span class="text-muted">{{data.story_description}}</span>
@@ -553,8 +581,11 @@ a.color_box .fa {
       </li>
 	 </ul>
   </div>
-  
-  <div class="list-group">
+  <button type="button" class="btn btn-primary btn-block toogler" ng-click="c.toogle_stories()">YOUR STORIES 
+    <span ng-if="(data.stories_status == false)" class=" fa fa-chevron-down "></span>
+    <span ng-if="(data.stories_status == true)" class=" fa fa-chevron-up "></span>
+  </button>
+  <div ng-if="(data.stories_status == true)" class="list-group fade in">
   	<a ng-repeat="task in data.list"  class="list-group-item" ng-class="{active: task.number == data.story_number}" ng-click="c.changeActive(task)">
       {{task.short_description}}  
       <span class="badge">{{task.time_worked}}</span>
@@ -564,15 +595,20 @@ a.color_box .fa {
 
 	</div>
 
-  <button type="button" class="btn btn-primary btn-block" ng-click="c.toogle_day_info()">DAY INFO</button>
-  <div ng-if="(data.day_info == true)" >
+  <button href="#demo" data-toggle="collapse" type="button" class="btn btn-primary btn-block toogler" ng-click="c.toogle_day_info()">LAST WEEK INFO
+    <span ng-if="(data.day_info == false)" class=" fa fa-chevron-down "></span>
+    <span ng-if="(data.day_info == true)" class=" fa fa-chevron-up "></span>
+  </button>
+  <div id="demo" class="collapse"  >
 
     <ul  class="list-group">
-      <li ng-repeat="day in data.day_list"  class="list-group-item list-group-item-success" >
+      <li ng-repeat="day in data.day_list"  class="list-group-item list-group-item-primary" >
         {{day}}  
       </li>
 	 </ul>
   </div>
+  
+
   
   
   

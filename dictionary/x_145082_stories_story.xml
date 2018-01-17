@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database>
-    <element extends="task" label="Story" max_length="40" name="x_145082_stories_story" sizeclass="22" type="collection">
+    <element extends="task" label="Story" max_length="40" name="x_145082_stories_story" sizeclass="17" type="collection">
         <element label="estimate" max_length="40" name="estimate" read_only="true" type="integer"/>
     </element>
 </database>

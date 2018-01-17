@@ -62,17 +62,42 @@
 	
 	c.toogle_stories = function(){
 		c.data.stories_status = !c.data.stories_status;
+		c.server.update();
 		
 	}
 	
 	c.logAndImport = function(){
 		var user = $('#usr');
 		var pwd = $('#pwd');
-		var chk001 = $('#chk001');
+		var open = $('#open')[0].checked;
+		var testing = $('#testing')[0].checked;
+		var uat = $('#uat')[0].checked;
+		var draft = $('#draft')[0].checked;
+		var require_acceptance = $('#require_acceptance')[0].checked;
+		var estimate = $('#estimate')[0].checked;
+		var story_acceptance = $('#story_acceptance')[0].checked;
+		var complain = $('#complain')[0].checked;
+		var ready = $('#ready')[0].checked;
+		var architecture    = $('#architecture')[0].checked;
+		var closed          = $('#closed')[0].checked;
+		var work_in_progres = $('#work_in_progres')[0].checked;
 		c.data.user = user[0].value;
 		c.data.user_pwd = pwd[0].value;
 		c.data.importStories = true;
-		console.log(user[0].value,pwd[0].value,chk001[0].checked);
+		//console.log(user[0].value,pwd[0].value,chk001[0].checked);
+		if (work_in_progres) c.data.state_work_in_progres = '%5EORstate%3D302'; else c.data.state_work_in_progres = '';
+		if (architecture)    c.data.state_architecture    = '%5EORstate%3D306'; else c.data.state_architecture    = '';
+		if (closed)          c.data.state_closed          = '%5EORstate%3D307'; else c.data.state_closed          = '';
+		if (open)            c.data.state_open            = '%5EORstate%3D301'; else c.data.state_open = '';
+		if (testing)         c.data.state_testing         = '%5EORstate%3D303'; else c.data.state_testing = '';
+		if (uat)             c.data.state_uat             = '%5EORstate%3D304'; else c.data.state_uat = '';
+		if (draft)           c.data.state_draft           = '%5EORstate%3D305'; else c.data.state_draft = '';
+		if (require_acceptance) c.data.state_require_acceptance = '%5EORstate%3D311'; else c.data.state_require_acceptance = '';
+		if (estimate)           c.data.state_estimate     = '%5EORstate%3D312'; else c.data.state_estimate = '';
+		if (story_acceptance)   c.data.state_story_acceptance = '%5EORstate%3D313'; else c.data.state_story_acceptance = '';
+		if (complain)           c.data.state_complain     = '%5EORstate%3D314'; else c.data.state_complain = '';
+		if (ready)              c.data.state_ready        = '%5EORstate%3D315'; else c.data.state_ready = '';
+		c.data.loading = "LOADING...";
 		c.server.update();
 		
 	}
@@ -86,7 +111,7 @@
 		}
 		c.data.card_to_delete = card;
 		c.server.update();
-		console.log(obj);
+		//console.log(obj);
 		
 		
 	}
@@ -95,147 +120,147 @@
 	
 }]]></client_script>
         <controller_as>c</controller_as>
-        <css>.iconlink a label,h2 {&#13;
-  display: block;&#13;
-  font-size: 2.5rem;&#13;
-  font-weight: 300;&#13;
-  line-height: 1.1;&#13;
-  padding: 0;&#13;
-  margin: 0 0 10px 0;&#13;
-}&#13;
-&#13;
-/* TOP ICON ---------- */&#13;
-&#13;
-a.top_icon {&#13;
-  display: block;&#13;
-  padding: 20px;&#13;
-  text-align: center;&#13;
-}&#13;
-&#13;
-a.top_icon .fa {&#13;
-  display: block;&#13;
-  text-align: center;&#13;
-}&#13;
-&#13;
-/* CIRCLE ICON ---------- */&#13;
-&#13;
-a.circle_icon {&#13;
-  display: block;&#13;
-  padding: 20px 0px 20px 70px;&#13;
-  position: relative;&#13;
-}&#13;
-&#13;
-a.circle_icon .fa {&#13;
-  position:absolute;&#13;
-  left: 0px;&#13;
-  top: 10px;&#13;
-}&#13;
-&#13;
-/* COLOR BOX ---------- */&#13;
-&#13;
-a.color_box {&#13;
-  display: block;&#13;
-  position: relative;&#13;
-  padding: 20px 20px 20px 82px;&#13;
-  border-radius: 4px;&#13;
-  margin-bottom: 20px;&#13;
-}&#13;
-&#13;
-a.color_box .fa {&#13;
-  position:absolute;&#13;
-  left: 20px;&#13;
-  top: 20px;&#13;
-  width:42px;&#13;
-  text-align: center;&#13;
-}&#13;
-&#13;
-.icon-link-background-primary {&#13;
-  background-color: $brand-primary;&#13;
-}&#13;
-&#13;
-.icon-link-background-info {&#13;
-  background-color: $brand-info;&#13;
-}&#13;
-&#13;
-.icon-link-background-success {&#13;
-  background-color: $brand-success;&#13;
-}&#13;
-&#13;
-.icon-link-background-warning {&#13;
-  background-color: $brand-warning;&#13;
-}&#13;
-&#13;
-.icon-link-background-danger {&#13;
-  background-color: $brand-danger;&#13;
-}&#13;
-&#13;
-.icon-link-background-default {&#13;
-  background-color: $brand-primary;&#13;
-}&#13;
-&#13;
-.text-primary {&#13;
-  color: $brand-primary;&#13;
-  &#13;
-  &amp;:hover {&#13;
-    color: darken($brand-primary, 20%);&#13;
-  }&#13;
-}&#13;
-&#13;
-.text-info {&#13;
-  color: $brand-info;&#13;
-  &#13;
-  &amp;:hover {&#13;
-    color: darken($brand-info, 20%);&#13;
-  }&#13;
-}&#13;
-&#13;
-.text-success {&#13;
-  color: $brand-success;&#13;
-  &#13;
-  &amp;:hover {&#13;
-    color: darken($brand-success, 20%);&#13;
-  }&#13;
-}&#13;
-&#13;
-.text-warning {&#13;
-  color: $brand-warning;&#13;
-  &#13;
-  &amp;:hover {&#13;
-    color: darken($brand-warning, 20%);&#13;
-  }&#13;
-}&#13;
-&#13;
-.text-danger {&#13;
-  color: $brand-danger;&#13;
-  &#13;
-  &amp;:hover {&#13;
-    color: darken($brand-danger, 20%);&#13;
-  }&#13;
-}&#13;
-&#13;
-.text-default {&#13;
-  color: $brand-primary;&#13;
-  &#13;
-  &amp;:hover {&#13;
-    color: darken($brand-primary, 20%);&#13;
-  }&#13;
-}&#13;
-&#13;
-.badge {&#13;
-    background-color: #428bca;&#13;
-}&#13;
-&#13;
-.counter {&#13;
-	color: $brand-danger;&#13;
-  font-weight: bold;&#13;
-}&#13;
-&#13;
-#story_comment {&#13;
-&#13;
-}&#13;
-&#13;
-.toogler {&#13;
-margin-bottom : 15px;&#13;
+        <css>.iconlink a label,h2 {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.1;
+  padding: 0;
+  margin: 0 0 10px 0;
+}
+
+/* TOP ICON ---------- */
+
+a.top_icon {
+  display: block;
+  padding: 20px;
+  text-align: center;
+}
+
+a.top_icon .fa {
+  display: block;
+  text-align: center;
+}
+
+/* CIRCLE ICON ---------- */
+
+a.circle_icon {
+  display: block;
+  padding: 20px 0px 20px 70px;
+  position: relative;
+}
+
+a.circle_icon .fa {
+  position:absolute;
+  left: 0px;
+  top: 10px;
+}
+
+/* COLOR BOX ---------- */
+
+a.color_box {
+  display: block;
+  position: relative;
+  padding: 20px 20px 20px 82px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+a.color_box .fa {
+  position:absolute;
+  left: 20px;
+  top: 20px;
+  width:42px;
+  text-align: center;
+}
+
+.icon-link-background-primary {
+  background-color: $brand-primary;
+}
+
+.icon-link-background-info {
+  background-color: $brand-info;
+}
+
+.icon-link-background-success {
+  background-color: $brand-success;
+}
+
+.icon-link-background-warning {
+  background-color: $brand-warning;
+}
+
+.icon-link-background-danger {
+  background-color: $brand-danger;
+}
+
+.icon-link-background-default {
+  background-color: $brand-primary;
+}
+
+.text-primary {
+  color: $brand-primary;
+  
+  &amp;:hover {
+    color: darken($brand-primary, 20%);
+  }
+}
+
+.text-info {
+  color: $brand-info;
+  
+  &amp;:hover {
+    color: darken($brand-info, 20%);
+  }
+}
+
+.text-success {
+  color: $brand-success;
+  
+  &amp;:hover {
+    color: darken($brand-success, 20%);
+  }
+}
+
+.text-warning {
+  color: $brand-warning;
+  
+  &amp;:hover {
+    color: darken($brand-warning, 20%);
+  }
+}
+
+.text-danger {
+  color: $brand-danger;
+  
+  &amp;:hover {
+    color: darken($brand-danger, 20%);
+  }
+}
+
+.text-default {
+  color: $brand-primary;
+  
+  &amp;:hover {
+    color: darken($brand-primary, 20%);
+  }
+}
+
+.badge.active {
+    background-color: darken($brand-danger, 20%);
+}
+
+.counter {
+	color: $brand-danger;
+  font-weight: bold;
+}
+
+#story_comment {
+
+}
+
+.toogler {
+margin-bottom : 15px;
 }</css>
         <data_table>sp_instance_link</data_table>
         <demo_data/>
@@ -265,6 +290,22 @@ margin-bottom : 15px;&#13;
 	data.user = "";
 	data.user_pwd = "";
 	data.foundUser = "";
+	
+
+	data.state_work_in_progres = '';
+	data.state_architecture    = '';
+	data.state_closed          = '';
+	data.state_open = '';
+	data.state_testing = '';
+	data.state_uat = '';
+	data.state_draft = '';
+	data.state_require_acceptance = '';
+	data.state_estimate = '';
+	data.state_story_acceptance = '';
+	data.state_complain = '';
+	data.state_ready = '';
+	data.loading = '';
+
 	
 	var story = "";
 	
@@ -317,14 +358,14 @@ margin-bottom : 15px;&#13;
 			
 	
 	if (input) {
-			//gs.addInfoMessage(input.card_to_delete.card_date);
+			
 		  if (input.card_to_delete != "") {
 				var card_to_delete = new GlideRecord('task_time_worked');
 					card_to_delete.addQuery('sys_id',input.card_to_delete);
 					card_to_delete.setLimit(1);
 					card_to_delete.query();
 				if (card_to_delete.next()) {
-					//gs.addInfoMessage('found');
+					
 					card_to_delete.task = '00000000000000000000000000000000';
 					card_to_delete.update();
 				} 
@@ -350,8 +391,6 @@ margin-bottom : 15px;&#13;
 					while (card.next()) {
 						card.comments = input.comment;
 						card.update();
-						//gs.addInfoMessage(card.sys_updated_on + " " + card.time_worked);
-						
 					}
 					data.story_number = story.number.toString();
 					data.story_short_description = story.short_description.toString();
@@ -402,8 +441,6 @@ margin-bottom : 15px;&#13;
 
 					while (card.next()) {
 						card.comments = input.comment;
-						//card.update();
-						//gs.addInfoMessage(card.sys_updated_on + " " + card.time_worked);
 						
 					}
 				}
@@ -422,15 +459,11 @@ margin-bottom : 15px;&#13;
 						}
 						data.story_list.push(info3);
 					}
-				
-				
 			}
 			
 		 }	
 			
 	}
-	
-			
 	
 	story = new GlideRecord('x_145082_stories_story');
 			story.addQuery('state',1).addOrCondition('state',2).addOrCondition('state',-5);
@@ -512,9 +545,6 @@ margin-bottom : 15px;&#13;
 		while (card.next()){ 
 			data.day_list.push("  - " + card.task.short_description + " " +card.task.description + " : " +card.comments + " [" + card.time_worked.slice(11) + "]"); 
 		}
-
-	
-	
 	
 	function display_counter(x) {
 		if (x < 60) return '' + x + 's';
@@ -529,7 +559,7 @@ margin-bottom : 15px;&#13;
 	}
 	
 	if (input){
-		//gs.addInfoMessage("ANSWER" + input.importStories);
+		
 		if (input.importStories){
 			
 
@@ -539,51 +569,84 @@ margin-bottom : 15px;&#13;
 			var requestUser = new sn_ws.RESTMessageV2();
 			requestUser.setBasicAuth(user,password);
 			requestUser.setRequestHeader("Accept","application/json");
-			requestUser.setEndpoint('https://support.spoc.pl/api/now/table/sys_user?sysparm_query=email%3D'+
-													user+
-													'&sysparm_fields=sys_id');
+			requestUser.setEndpoint('https://support.spoc.pl/api/now/table/sys_user?sysparm_query=email%3D'+	user +	'&sysparm_fields=sys_id');
 
 			requestUser.setHttpMethod('GET');
-
+			data.loading = 'LOADING...';
 			var responseUser = requestUser.execute();
-			//var objUserX = JSON.parse(responseUser[0]);
-			//gs.addInfoMessage(responseUser.getStatusCode());
-			//gs.log(response.getBody());
-			//gs.addInfoMessage(response.getBody());
-			//gs.info(response.getBody());
 			
-			//gs.addInfoMessage("ANSWER" + data.import_answer);
-			//for (var i=0;i<objUser.result.length;i++) gs.info(objUser.result[i].sys_id );
-      
-			if (responseUser.getStatusCode() != 200) data.import_answer = "ERROR" + responseUser.getStatusCode();
+			if (responseUser.getStatusCode() != 200) {
+				data.loading = "";
+				data.import_answer = " ERROR: " + responseUser.getStatusCode()+' ';
+			}
 			else {
+				  
 				  var objUser = JSON.parse(responseUser.getBody());
 		      data.foundUser = objUser.result.length.toString();
 					var foundUser = objUser.result[0].sys_id.toString();
 
-					var request = new sn_ws.RESTMessageV2();
-
-					//request.setEndpoint('https://support.spoc.pl/api/now/table/x_mwtso_ppm_story?sysparm_query=assigned_to%3Dc2e35d38377bf200811dfa7b34990ef4%255Estate!%253D303%255EORstate%253DNULL%255Estate!%253D307%255EORstate%253DNULL%255Estate!%253D304%255EORstate%253DNULL%255Estate!%253D305%255EORstate%253DNULL%255Eblocked%253Dfalse&sysparm_fields=number%2Cshort_description');
-					request.setEndpoint('https://support.spoc.pl/api/now/table/x_mwtso_ppm_story?sysparm_query=assigned_to%3D'+
-															//'c2e35d38377bf200811dfa7b34990ef4'+
-															foundUser +
-															'%5Estate!%3D303%5Estate!%3D307%5Estate!%3D304%5Estate!%3D305%5Eblocked!%3Dtrue&sysparm_fields=number%2Cshort_description%2Cstate%2Cblocked');
+					var request = new sn_ws.RESTMessageV2(); 
+					
+					var q = 'https://support.spoc.pl/api/now/table/x_mwtso_ppm_story?sysparm_query=state%3D'+
+					input.state_work_in_progres + 
+					input.state_architecture + 
+					input.state_closed + 
+					input.state_open +
+					input.state_testing +
+					input.state_uat +
+					input.state_draft +
+					input.state_require_acceptance +
+					input.state_estimate +
+					input.state_story_acceptance +
+					input.state_complain +
+					input.state_ready +
+					'&sysparm_fields=number%2Cshort_description%2Cstate&assigned_to='+
+					foundUser;
+					
+				request.setEndpoint(q);
 
 					request.setHttpMethod('GET');
 					request.setBasicAuth(user,password);
 					request.setRequestHeader("Accept","application/json");
 
 					var response = request.execute();
-					//gs.addInfoMessage('EXEC');
-					//gs.log(response.getBody());
-					//gs.addInfoMessage(response.getBody());
-					//gs.info(response.getBody());
-				  if (response.getStatusCode() != 200) data.import_answer = "ERROR" + responseUser.getStatusCode();
+										
+				  if (response.getStatusCode() != 200) {
+						data.import_answer = " ERROR: " + responseUser.getStatusCode()+' ';
+						data.loading = '';
+					}
 				  else {
+						  data.loading = '';
 							var obj = JSON.parse(response.getBody());
-							data.import_answer = obj.result.length.toString();
-							//gs.addInfoMessage("ANSWER" + data.import_answer);
-							for (var i=0;i<obj.result.length;i++) gs.info(obj.result[i].number + " " + obj.result[i].short_description);
+							data.import_answer =  " "+obj.result.length.toString() + " stories imported! ";
+							
+						  var del = new GlideRecord('x_145082_stories_story');
+						  
+						  del.query();
+						  while (del.next()) {
+								del.deleteRecord();
+							}
+						data.list = [];
+						
+						for (var i=0;i<obj.result.length;i++) {
+							
+							story = new GlideRecord('x_145082_stories_story');
+							story.addQuery('short_description',obj.result[i].number);
+							story.setLimit(1);							
+							story.query();
+							if(story.next()) {
+								story.state = 1;
+								story.description = obj.result[i].short_description;
+								story.update();
+							}
+							else {
+								story.initialize();
+								story.state = 1;
+								story.short_description = obj.result[i].number;
+								story.description = obj.result[i].short_description;
+								story.insert();								
+							}
+						}
 					}
 				}
 		 }
@@ -595,7 +658,7 @@ margin-bottom : 15px;&#13;
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>283</sys_mod_count>
+        <sys_mod_count>348</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -603,7 +666,7 @@ margin-bottom : 15px;&#13;
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-17 13:26:24</sys_updated_on>
+        <sys_updated_on>2018-01-17 23:01:06</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
 
   <a ng-if="(data.story_state == '2')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}" >
@@ -611,7 +674,7 @@ margin-bottom : 15px;&#13;
 	
     <h2 ng-click="c.toogle()">{{data.story_short_description}} : <span class="counter">{{data.counter_display}}</span>
       <br> <span class="text-muted">{{data.story_description}}</span>
-      <br> <span class="badge">{{data.story_time_worked}}</span>
+      <br> <span class="badge badge-danger active">{{data.story_time_worked}}</span>
       <br> <span ng-if="(data.comment != '')"><i>{{data.comment}}</i></span>
     </h2>       
     
@@ -622,7 +685,7 @@ margin-bottom : 15px;&#13;
 
     <h2 ng-click="c.toogle()">{{data.story_short_description}} 
       <br><span class="text-muted">{{data.story_description}}</span>
-      <br><span class="badge">{{data.story_time_worked}}</span>
+      <br><span class="badge badge-danger active">{{data.story_time_worked}}</span>
     </h2>
     <p>Work description</p>
     <div><input id="story_comment"></div>
@@ -637,26 +700,32 @@ margin-bottom : 15px;&#13;
       </li>
 	 </ul>
   </div>
-  <button type="button" class="btn btn-primary btn-block toogler" ng-click="c.toogle_stories()">YOUR STORIES 
-    <span ng-if="(data.stories_status == false)" class=" fa fa-chevron-down "></span>
-    <span ng-if="(data.stories_status == true)" class=" fa fa-chevron-up "></span>
+ 
+  <button ng-if="(data.story_number == '')" type="button" class="btn btn-danger btn-block toogler">NO ACTIVE STORIES</button>
+  
+  
+  <button href="#yourstories" data-toggle="collapse" type="button" class="btn btn-primary btn-block toogler" ng-click="c.toogle_stories()">YOUR STORIES 
+    <span ng-click="c.toogle_stories()" ng-if="(data.stories_status == false)" class=" fa fa-chevron-down "></span>
+    <span ng-click="c.toogle_stories()" ng-if="(data.stories_status == true)" class=" fa fa-chevron-up "></span>
   </button>
-  <div ng-if="(data.stories_status == true)" class="list-group fade in">
-  	<a ng-repeat="task in data.list"  class="list-group-item" ng-class="{active: task.number == data.story_number}" ng-click="c.changeActive(task)">
-      {{task.short_description}}  
-      <span class="badge">{{task.time_worked}}</span>
-      <br>
-     {{task.description}}
-    </a>
-
-	</div>
+  <div id="yourstories" class='collapse'>
+    <div   class="list-group">
+      <a ng-repeat="task in data.list"  class="list-group-item" ng-class="{active: task.number == data.story_number}" ng-click="c.changeActive(task)">
+        {{task.short_description}}  
+        <span class="badge">{{task.time_worked}}</span>
+        <br>
+       {{task.description}}
+      </a>
+      <div ng-if="(data.list.length == 0)">NO STORIES - you have to import some stories...</div>
+    </div>
+  </div>
 
   <button href="#lastweek" data-toggle="collapse" type="button" class="btn btn-primary btn-block toogler" ng-click="c.toogle_day_info()">LAST WEEK INFO
-    <span ng-if="(data.day_info == false)" class=" fa fa-chevron-down "></span>
-    <span ng-if="(data.day_info == true)" class=" fa fa-chevron-up "></span>
+    <span ng-click="c.toogle_day_info()" ng-if="(data.day_info == false)" class=" fa fa-chevron-down "></span>
+    <span ng-click="c.toogle_day_info()" ng-if="(data.day_info == true)" class=" fa fa-chevron-up "></span>
   </button>
   <div id="lastweek" class="collapse"  >
-
+		Your work cards during last week:
     <ul  class="list-group">
       <li ng-repeat="day in data.day_list"  class="list-group-item list-group-item-primary" >
         {{day}}  
@@ -667,18 +736,50 @@ margin-bottom : 15px;&#13;
   <button href="#login" data-toggle="collapse" type="button" class="btn btn-primary btn-block toogler" >IMPORT STORIES ASSIGNED TO YOU</button>
   <div id="login" class="collapse"  >
     
+	<div class="col-md-6">
     <div class="checkbox">
-      <label><input id="chk001" type="checkbox" value="303" checked>Work in progress</label>
+      <label><input id="open"    type="checkbox" value="301">Open</label>
     </div>
     <div class="checkbox">
-      <label><input type="checkbox" value="304">Architecture</label>
+      <label><input id="work_in_progres" type="checkbox" value="302">Work in progress</label>
     </div>
-    <div class="checkbox disabled">
-      <label><input type="checkbox" value="305">UAT</label>
+    <div class="checkbox">
+      <label><input id="testing" type="checkbox" value="303">Testing</label>
     </div>
+    <div class="checkbox">
+      <label><input id="uat" type="checkbox" value="304">UAT</label>
+    </div>
+    <div class="checkbox">
+      <label><input id="draft" type="checkbox" value="305">Draft</label>
+    </div>
+    <div class="checkbox">
+      <label><input id="architecture"    type="checkbox" value="306">Architecture</label>
+    </div>
+   </div>
+   <div class="col-md-6">
+    
+    <div class="checkbox">
+      <label><input id="closed"    type="checkbox" value="307">Closed</label>
+    </div>
+    <div class="checkbox">
+      <label><input id="require_acceptance" type="checkbox" value="311">Require acceptance</label>
+    </div>
+    <div class="checkbox">
+      <label><input id="estimate" type="checkbox" value="312">Estimate</label>
+    </div>
+    <div class="checkbox">
+      <label><input id="story_acceptance" type="checkbox" value="313">Story acceptance</label>
+    </div>
+     <div class="checkbox">
+      <label><input id="complain" type="checkbox" value="314">Complain</label>
+    </div>
+    <div class="checkbox">
+      <label><input id="ready" type="checkbox" value="315">Ready</label>
+    </div>
+   </div>
     
     <div class="form-group">
-      <label for="usr">Name:</label>
+      <label for="usr">Support SPOC login:</label>
       <input type="text" class="form-control" id="usr">
     </div>
     <div class="form-group">
@@ -686,9 +787,10 @@ margin-bottom : 15px;&#13;
       <input type="password" class="form-control" id="pwd">
     </div>
     
-    <button type="button" class="btn btn-danger" ng-click="c.logAndImport()">IMPORT</button>
-    <div>{{data.import_answer}}</div>
-    <div>{{data.foundUser}}</div>
+    <button ng-if="(data.loading == '')" type="button" class="btn btn-primary btn-block toogler" ng-click="c.logAndImport()">IMPORT <span class="badge badge-light info">{{data.import_answer}}</span></button>
+    <button ng-if="(data.loading != '')" type="button" class="btn btn-danger btn-block toogler" >LOADING....</button>
+    <div></div>
+
     
     
     

@@ -65,6 +65,18 @@
 		
 	}
 	
+	c.logAndImport = function(){
+		var user = $('#usr');
+		var pwd = $('#pwd');
+		var chk001 = $('#chk001');
+		c.data.user = user[0].value;
+		c.data.user_pwd = pwd[0].value;
+		c.data.importStories = true;
+		console.log(user[0].value,pwd[0].value,chk001[0].checked);
+		c.server.update();
+		
+	}
+	
 	c.tick();
 	
 	c.delete_time_card = function(card){	
@@ -248,6 +260,11 @@ margin-bottom : 15px;&#13;
 	data.counter = 0;
 	data.story_list = [];
 	data.card_to_delete = "";
+	data.importStories = false;
+	data.import_answer = "";
+	data.user = "";
+	data.user_pwd = "";
+	data.foundUser = "";
 	
 	var story = "";
 	
@@ -511,27 +528,66 @@ margin-bottom : 15px;&#13;
 		
 	}
 	
-	
-	var request = new sn_ws.RESTMessageV2();
-  //request.setEndpoint('https://support.spoc.pl/api/now/table/x_mwtso_ppm_story?sysparm_query=assigned_to%3Dc2e35d38377bf200811dfa7b34990ef4%255Estate!%253D303%255EORstate%253DNULL%255Estate!%253D307%255EORstate%253DNULL%255Estate!%253D304%255EORstate%253DNULL%255Estate!%253D305%255EORstate%253DNULL%255Eblocked%253Dfalse&sysparm_fields=number%2Cshort_description');
-  request.setEndpoint('https://support.spoc.pl/api/now/table/x_mwtso_ppm_story?sysparm_query=assigned_to%3Dc2e35d38377bf200811dfa7b34990ef4%5Estate!%3D303%5Estate!%3D307%5Estate!%3D304%5Estate!%3D305%5Eblocked!%3Dtrue&sysparm_fields=number%2Cshort_description%2Cstate%2Cblocked');
-	
-	request.setHttpMethod('GET');
+	if (input){
+		//gs.addInfoMessage("ANSWER" + input.importStories);
+		if (input.importStories){
+			
 
-  var user = 'wojciech.winski@spoc.pl';
-  var password = '2XXusta2@@usta';
+			var user = input.user;
+			var password = input.user_pwd;
+			
+			var requestUser = new sn_ws.RESTMessageV2();
+			requestUser.setBasicAuth(user,password);
+			requestUser.setRequestHeader("Accept","application/json");
+			requestUser.setEndpoint('https://support.spoc.pl/api/now/table/sys_user?sysparm_query=email%3D'+
+													user+
+													'&sysparm_fields=sys_id');
 
-  request.setBasicAuth(user,password);
-  request.setRequestHeader("Accept","application/json");
+			requestUser.setHttpMethod('GET');
 
-  var response = request.execute();
-	//gs.addInfoMessage('EXEC');
-  //gs.log(response.getBody());
-	//gs.addInfoMessage(response.getBody());
-	//gs.info(response.getBody());
-	var obj = JSON.parse(response.getBody());
-	for (var i=0;i<obj.result.length;i++) gs.info(obj.result[i].number + " " + obj.result[i].short_description);
+			var responseUser = requestUser.execute();
+			//var objUserX = JSON.parse(responseUser[0]);
+			//gs.addInfoMessage(responseUser.getStatusCode());
+			//gs.log(response.getBody());
+			//gs.addInfoMessage(response.getBody());
+			//gs.info(response.getBody());
+			
+			//gs.addInfoMessage("ANSWER" + data.import_answer);
+			//for (var i=0;i<objUser.result.length;i++) gs.info(objUser.result[i].sys_id );
+      
+			if (responseUser.getStatusCode() != 200) data.import_answer = "ERROR" + responseUser.getStatusCode();
+			else {
+				  var objUser = JSON.parse(responseUser.getBody());
+		      data.foundUser = objUser.result.length.toString();
+					var foundUser = objUser.result[0].sys_id.toString();
 
+					var request = new sn_ws.RESTMessageV2();
+
+					//request.setEndpoint('https://support.spoc.pl/api/now/table/x_mwtso_ppm_story?sysparm_query=assigned_to%3Dc2e35d38377bf200811dfa7b34990ef4%255Estate!%253D303%255EORstate%253DNULL%255Estate!%253D307%255EORstate%253DNULL%255Estate!%253D304%255EORstate%253DNULL%255Estate!%253D305%255EORstate%253DNULL%255Eblocked%253Dfalse&sysparm_fields=number%2Cshort_description');
+					request.setEndpoint('https://support.spoc.pl/api/now/table/x_mwtso_ppm_story?sysparm_query=assigned_to%3D'+
+															//'c2e35d38377bf200811dfa7b34990ef4'+
+															foundUser +
+															'%5Estate!%3D303%5Estate!%3D307%5Estate!%3D304%5Estate!%3D305%5Eblocked!%3Dtrue&sysparm_fields=number%2Cshort_description%2Cstate%2Cblocked');
+
+					request.setHttpMethod('GET');
+					request.setBasicAuth(user,password);
+					request.setRequestHeader("Accept","application/json");
+
+					var response = request.execute();
+					//gs.addInfoMessage('EXEC');
+					//gs.log(response.getBody());
+					//gs.addInfoMessage(response.getBody());
+					//gs.info(response.getBody());
+				  if (response.getStatusCode() != 200) data.import_answer = "ERROR" + responseUser.getStatusCode();
+				  else {
+							var obj = JSON.parse(response.getBody());
+							data.import_answer = obj.result.length.toString();
+							//gs.addInfoMessage("ANSWER" + data.import_answer);
+							for (var i=0;i<obj.result.length;i++) gs.info(obj.result[i].number + " " + obj.result[i].short_description);
+					}
+				}
+		 }
+		}
 })();]]></script>
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
@@ -539,7 +595,7 @@ margin-bottom : 15px;&#13;
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>249</sys_mod_count>
+        <sys_mod_count>283</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -547,7 +603,7 @@ margin-bottom : 15px;&#13;
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-16 23:05:44</sys_updated_on>
+        <sys_updated_on>2018-01-17 13:26:24</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
 
   <a ng-if="(data.story_state == '2')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}" >
@@ -595,11 +651,11 @@ margin-bottom : 15px;&#13;
 
 	</div>
 
-  <button href="#demo" data-toggle="collapse" type="button" class="btn btn-primary btn-block toogler" ng-click="c.toogle_day_info()">LAST WEEK INFO
+  <button href="#lastweek" data-toggle="collapse" type="button" class="btn btn-primary btn-block toogler" ng-click="c.toogle_day_info()">LAST WEEK INFO
     <span ng-if="(data.day_info == false)" class=" fa fa-chevron-down "></span>
     <span ng-if="(data.day_info == true)" class=" fa fa-chevron-up "></span>
   </button>
-  <div id="demo" class="collapse"  >
+  <div id="lastweek" class="collapse"  >
 
     <ul  class="list-group">
       <li ng-repeat="day in data.day_list"  class="list-group-item list-group-item-primary" >
@@ -608,6 +664,35 @@ margin-bottom : 15px;&#13;
 	 </ul>
   </div>
   
+  <button href="#login" data-toggle="collapse" type="button" class="btn btn-primary btn-block toogler" >IMPORT STORIES ASSIGNED TO YOU</button>
+  <div id="login" class="collapse"  >
+    
+    <div class="checkbox">
+      <label><input id="chk001" type="checkbox" value="303" checked>Work in progress</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" value="304">Architecture</label>
+    </div>
+    <div class="checkbox disabled">
+      <label><input type="checkbox" value="305">UAT</label>
+    </div>
+    
+    <div class="form-group">
+      <label for="usr">Name:</label>
+      <input type="text" class="form-control" id="usr">
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" id="pwd">
+    </div>
+    
+    <button type="button" class="btn btn-danger" ng-click="c.logAndImport()">IMPORT</button>
+    <div>{{data.import_answer}}</div>
+    <div>{{data.foundUser}}</div>
+    
+    
+    
+  </div>
 
   
   

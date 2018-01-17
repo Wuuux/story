@@ -20,14 +20,11 @@
 		
 	};
 	
-
-	
 	c.changeState = function(state) {
 		c.data.story_state = state.toString();
-		//if (state == '2') c.data.counter = 0;
+		
 		if (state == '2'){
 			var comment = angular.element( document.querySelector( '#story_comment' ) );
-			//console.log('comment = ',comment.context.value);
 			c.data.comment = comment.context.value;
 		}
 		c.server.update();
@@ -84,7 +81,7 @@
 		c.data.user = user[0].value;
 		c.data.user_pwd = pwd[0].value;
 		c.data.importStories = true;
-		//console.log(user[0].value,pwd[0].value,chk001[0].checked);
+		
 		if (work_in_progres) c.data.state_work_in_progres = '%5EORstate%3D302'; else c.data.state_work_in_progres = '';
 		if (architecture)    c.data.state_architecture    = '%5EORstate%3D306'; else c.data.state_architecture    = '';
 		if (closed)          c.data.state_closed          = '%5EORstate%3D307'; else c.data.state_closed          = '';
@@ -110,14 +107,8 @@
 			"card_date" : card.slice(0,19).toString()
 		}
 		c.data.card_to_delete = card;
-		c.server.update();
-		//console.log(obj);
-		
-		
+		c.server.update();		
 	}
-	
-	
-	
 }]]></client_script>
         <controller_as>c</controller_as>
         <css>.iconlink a label,h2 {
@@ -247,7 +238,7 @@ a.color_box .fa {
 }
 
 .badge.active {
-    background-color: darken($brand-danger, 20%);
+    background-color: #8c3c5a;
 }
 
 .counter {
@@ -261,6 +252,14 @@ a.color_box .fa {
 
 .toogler {
 margin-bottom : 15px;
+}
+
+.list-group-item.active {
+background-color: #8c3c5a;
+}
+
+.list-group-item .badge {
+  background-color: #8c3c5a;
 }</css>
         <data_table>sp_instance_link</data_table>
         <demo_data/>
@@ -358,18 +357,6 @@ margin-bottom : 15px;
 			
 	
 	if (input) {
-			
-		  if (input.card_to_delete != "") {
-				var card_to_delete = new GlideRecord('task_time_worked');
-					card_to_delete.addQuery('sys_id',input.card_to_delete);
-					card_to_delete.setLimit(1);
-					card_to_delete.query();
-				if (card_to_delete.next()) {
-					
-					card_to_delete.task = '00000000000000000000000000000000';
-					card_to_delete.update();
-				} 
-			} 
 
 			if (data.active != input.story_number){
 				
@@ -658,7 +645,7 @@ margin-bottom : 15px;
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>348</sys_mod_count>
+        <sys_mod_count>352</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -666,7 +653,7 @@ margin-bottom : 15px;
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-17 23:01:06</sys_updated_on>
+        <sys_updated_on>2018-01-17 23:16:04</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
 
   <a ng-if="(data.story_state == '2')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}" >
@@ -789,17 +776,9 @@ margin-bottom : 15px;
     
     <button ng-if="(data.loading == '')" type="button" class="btn btn-primary btn-block toogler" ng-click="c.logAndImport()">IMPORT <span class="badge badge-light info">{{data.import_answer}}</span></button>
     <button ng-if="(data.loading != '')" type="button" class="btn btn-danger btn-block toogler" >LOADING....</button>
-    <div></div>
-
-    
-    
-    
+    <div>
+   </div>
   </div>
-
-  
-  
-  
-
 
 </div>]]></template>
     </sp_widget>

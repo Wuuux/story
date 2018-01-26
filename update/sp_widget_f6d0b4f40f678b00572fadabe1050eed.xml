@@ -6,7 +6,7 @@
 	
 	//angular.module('ngSwipeRightExample', ['ngTouch']);
 
-	
+  
   var c = this;
 	c.data.task_info = false;
 	c.data.day_info = false;
@@ -24,20 +24,14 @@
 		
 	};
 	
-// 	$( "div.ss" ).on('swiperight',(function(e){
-// 		console.log(e);
-	//}));
- 
-  // Callback function references the event target and adds the 'swipe' class to it
-//   function swipeHandler( event ){
-//     $( event.target ).addClass( "swipe" );
-//   }
-	
+
 	c.swiperight = function(e) {
+		if (c.data.story_state == '2') return;
 		var el = $(e);
 		el[0].currentTarget.classList.add("swiped");		
 	};
 	c.swipeleft = function(e) {
+		if (c.data.story_state == '2') return;
 		var el = $(e);
 		el[0].currentTarget.classList.remove("swiped");
 	};
@@ -97,10 +91,25 @@
 		$('#login').removeClass('in');
 		c.data.day_info = false;
 		c.data.task_info = false;
+		var toDelete = $('a.swiped');
+		c.data.listToDelete = [];
+		for (var i=0;i<toDelete.length;i++){
+			c.data.listToDelete.push(toDelete[i].innerText.slice(0,10));
+		}
+		if (toDelete.length > 0 && !c.data.stories_status) {
+			$('#exampleModal').modal('show');
+		}
+		console.log(c.data.listToDelete);
 		
 		
 		//c.server.update();
 		
+	};
+	
+	c.delete_swiped = function(){
+		console.log('To delete:',c.data.listToDelete);
+		c.data.deleteFlag = true;
+		c.server.update();
 	};
 	
 	c.login = function(){
@@ -165,7 +174,9 @@
 }]]></client_script>
         <controller_as>c</controller_as>
         <css>a.swiped {&#13;
-    background-color: red;&#13;
+    background-color: red;    &#13;
+    position: relative;&#13;
+    left: 30px;&#13;
   }&#13;
 &#13;
 .iconlink a label,h2 {&#13;
@@ -363,6 +374,9 @@ background-color: #8c3c5a;&#13;
 	data.state_ready = '';
 	data.imp_story = '';
 	data.loading = '';
+	
+	data.listToDelete = [];
+	data.deleteFlag = false;
 
 	
 	var story = "";
@@ -419,7 +433,20 @@ background-color: #8c3c5a;&#13;
 			
 	
 	if (input) {
-			
+		
+			if (input.deleteFlag) {
+				data.deleteFlag = false;
+				for (var i=0;i<input.listToDelete.length;i++){
+					var delStory = new GlideRecord('x_145082_stories_story');
+					delStory.addQuery('short_description',input.listToDelete[i]);
+					delStory.query();
+							  if (delStory.next()) {
+									delStory.deleteRecord();
+								}
+				}
+			}
+		
+		
 			if (data.active != input.story_number){
 				
 				story = new GlideRecord('x_145082_stories_story');
@@ -741,7 +768,7 @@ background-color: #8c3c5a;&#13;
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>438</sys_mod_count>
+        <sys_mod_count>454</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -749,7 +776,7 @@ background-color: #8c3c5a;&#13;
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-25 16:07:54</sys_updated_on>
+        <sys_updated_on>2018-01-26 17:05:12</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
   <a ng-if="(data.story_state == '2')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}" >
     <div class="m-b fa fa-{{::options.glyph}} fa-4x {{::options.class_name}} text-{{::options.color}} " ng-click="c.changeState('-5')"><br>STOP</div>
@@ -893,6 +920,30 @@ background-color: #8c3c5a;&#13;
    </div>
   </div>
 
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Attention!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Do you want delete these stories?<br>
+        <div ng-repeat="(key,story) in data.listToDelete">
+          {{story}}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="c.delete_swiped()">DELETE</button>
+      </div>
+    </div>
+  </div>
 </div>]]></template>
     </sp_widget>
 </record_update>

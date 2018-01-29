@@ -7,10 +7,11 @@
 	//angular.module('ngSwipeRightExample', ['ngTouch']);
 
   
-  var c = this;
+    var c = this;
 	c.data.task_info = false;
 	c.data.day_info = false;
 	c.data.stories_status = false;
+	c.data.nothingToDelete = true;
 	
 	c.display_counter = function(x) {
 		if (x < 60) return '' + x + 's';
@@ -26,14 +27,20 @@
 	
 
 	c.swiperight = function(e) {
+		//e.stopPropagation();
 		if (c.data.story_state == '2') return;
 		var el = $(e);
-		el[0].currentTarget.classList.add("swiped");		
+		el[0].currentTarget.classList.add("swiped");
+		c.data.toDeleteCount = $('a.swiped').length;
+		c.data.nothingToDelete=(c.data.toDeleteCount == 0);
+		
 	};
 	c.swipeleft = function(e) {
 		if (c.data.story_state == '2') return;
 		var el = $(e);
 		el[0].currentTarget.classList.remove("swiped");
+		c.data.toDeleteCount = $('a.swiped').length;
+		c.data.nothingToDelete=(c.data.toDeleteCount == 0);
 	};
 	
 	c.changeState = function(state) {
@@ -42,6 +49,7 @@
 		if (state == '2'){
 			var comment = angular.element( document.querySelector( '#story_comment' ) );
 			c.data.comment = comment.context.value;
+			c.data.counter_display = '0s';
 		}
 		
 		c.server.update();
@@ -99,7 +107,7 @@
 		if (toDelete.length > 0 && !c.data.stories_status) {
 			$('#exampleModal').modal('show');
 		}
-		console.log(c.data.listToDelete);
+		//console.log(c.data.listToDelete);
 		
 		
 		//c.server.update();
@@ -107,9 +115,17 @@
 	};
 	
 	c.delete_swiped = function(){
-		console.log('To delete:',c.data.listToDelete);
+		//console.log('To delete:',c.data.listToDelete);
 		c.data.deleteFlag = true;
 		c.server.update();
+	};
+	
+	c.unswipe_all = function(){
+		var swiped = $('a.swiped');
+		for(var i=0;i<swiped.length;i++){
+			swiped[i].classList.remove('swiped');
+		}
+		c.data.nothingToDelete = true;
 	};
 	
 	c.login = function(){
@@ -177,6 +193,8 @@
     background-color: red;    &#13;
     position: relative;&#13;
     left: 30px;&#13;
+  color: white;&#13;
+  padding-right : 45px;&#13;
   }&#13;
 &#13;
 .iconlink a label,h2 {&#13;
@@ -307,6 +325,11 @@ a.color_box .fa {&#13;
 &#13;
 .badge.active {&#13;
     background-color: #8c3c5a;&#13;
+  color: white;&#13;
+}&#13;
+&#13;
+a &gt; .badge {&#13;
+color: white !important;&#13;
 }&#13;
 &#13;
 .counter {&#13;
@@ -377,6 +400,8 @@ background-color: #8c3c5a;&#13;
 	
 	data.listToDelete = [];
 	data.deleteFlag = false;
+	data.nothingToDelete = true;
+	data.toDeleteCount = 0;
 
 	
 	var story = "";
@@ -416,11 +441,12 @@ background-color: #8c3c5a;&#13;
 				
 				
 				if (story.state == 2) {
+					data.counter_display = '0s';
 					var end = new GlideDateTime().getNumericValue();
 					var start = story.work_start.dateNumericValue();	
 					var diff = end-start;					
 					data.counter = Math.floor(diff/1000);
-					data.counter_display = display_counter(data.counter);
+					if (!input) data.counter_display = display_counter(data.counter);
 				}
 			} else {
 				data.story_number = "";
@@ -433,7 +459,9 @@ background-color: #8c3c5a;&#13;
 			
 	
 	if (input) {
-		
+			if (input.story_state == '2') {
+				data.counter_display = '0s';
+			}
 			if (input.deleteFlag) {
 				data.deleteFlag = false;
 				for (var i=0;i<input.listToDelete.length;i++){
@@ -502,6 +530,7 @@ background-color: #8c3c5a;&#13;
 				else if (data.story_state == -5) {
 					story.state = 2;
 					story.close_notes = input.comment;
+					data.counter_display = '0s';
 				}
 				data.story_state = input.story_state;
 				
@@ -768,7 +797,7 @@ background-color: #8c3c5a;&#13;
         <sys_created_on>2018-01-06 13:22:31</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f6d0b4f40f678b00572fadabe1050eed</sys_id>
-        <sys_mod_count>454</sys_mod_count>
+        <sys_mod_count>496</sys_mod_count>
         <sys_name>Icon active story</sys_name>
         <sys_package display_value="Stories" source="x_145082_stories">90bd63e40fe38b00572fadabe1050ea1</sys_package>
         <sys_policy/>
@@ -776,7 +805,7 @@ background-color: #8c3c5a;&#13;
         <sys_scope display_value="Stories">90bd63e40fe38b00572fadabe1050ea1</sys_scope>
         <sys_update_name>sp_widget_f6d0b4f40f678b00572fadabe1050eed</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-26 17:05:12</sys_updated_on>
+        <sys_updated_on>2018-01-29 14:22:44</sys_updated_on>
         <template><![CDATA[<div class="iconlink">
   <a ng-if="(data.story_state == '2')"  class="top_icon" ng-href="{{::data.href}}" target="{{::data.target}}" >
     <div class="m-b fa fa-{{::options.glyph}} fa-4x {{::options.class_name}} text-{{::options.color}} " ng-click="c.changeState('-5')"><br>STOP</div>
@@ -815,7 +844,10 @@ background-color: #8c3c5a;&#13;
   <button ng-if="(data.story_number == '')" type="button" class="btn btn-danger btn-block toogler">NO ACTIVE STORIES</button>
   
   
-  <button href="#yourstories" data-toggle="collapse" type="button" class="btn btn-primary btn-block toogler" ng-click="c.toogle_stories()">YOUR STORIES 
+  <button href="#yourstories" data-toggle="collapse" type="button" class="btn btn-primary btn-block toogler"  ng-click="c.toogle_stories()">
+    <span ng-if="data.nothingToDelete == true">YOUR STORIES</span> 
+    <span ng-if="data.nothingToDelete == false" class="badge badge-danger">DELETE ({{c.data.toDeleteCount}}) ?</span> 
+     
     <span ng-click="c.toogle_stories()" ng-if="(data.stories_status == false)" class=" fa fa-chevron-down "></span>
     <span ng-click="c.toogle_stories()" ng-if="(data.stories_status == true)" class=" fa fa-chevron-up "></span>
   </button>
@@ -823,14 +855,18 @@ background-color: #8c3c5a;&#13;
     <div   class="list-group">
       <div class="box" ng-repeat="(key,task) in data.list">
         <div class="col-12 ss">
+          
           <a class="list-group-item ss" ng-class="{active: task.number == data.story_number}"  
              ng-swipe-right="c.swiperight($event)" 
              ng-swipe-left ="c.swipeleft($event)"
              ng-click="c.changeActive(task)">
-              {{task.short_description}}
-              <span class="badge">{{task.time_worked}}</span>
-              <br>
-             {{task.description}}
+              
+              <div>
+                {{task.short_description}}
+              	<span class="badge">{{task.time_worked}}</span>
+              	<br>
+             	{{task.description}}
+               </div>
           </a>
         </div>
         
@@ -939,7 +975,7 @@ background-color: #8c3c5a;&#13;
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="c.unswipe_all()">NO</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="c.delete_swiped()">DELETE</button>
       </div>
     </div>
